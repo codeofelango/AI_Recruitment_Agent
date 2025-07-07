@@ -28,10 +28,10 @@ def get_requirements()->List[str]:
 print(get_requirements())
 
 setup(
-    name="AI-TRAVEL-PLANNER",
+    name="AI-RECRUITMENT-AGENT",
     version="0.0.1",
-    author="sunny savita",
-    author_email="snshrivas3365@gmail.com",
+    author="Elango",
+    author_email="elango.yuva27@gmail.com",
     packages = find_packages(),
     install_requires=get_requirements()
 )

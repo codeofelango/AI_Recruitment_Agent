@@ -7,6 +7,7 @@ import os
 import datetime
 from dotenv import load_dotenv
 from pydantic import BaseModel
+import uvicorn
 load_dotenv()
 
 app = FastAPI()
@@ -24,6 +25,7 @@ class QueryRequest(BaseModel):
 @app.post("/query")
 async def query_travel_agent(query:QueryRequest):
     try:
+        print("Comes at query place")
         print(query)
         graph = GraphBuilder(model_provider="groq")
         react_app=graph()
@@ -47,3 +49,4 @@ async def query_travel_agent(query:QueryRequest):
         return {"answer": final_output}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+        
