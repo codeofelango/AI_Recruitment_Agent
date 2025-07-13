@@ -1,0 +1,724 @@
+<script>
+        // Quick action functionality
+        function fillInput(text) {
+            document.getElementById('userInput').value = text;
+            document.getElementById('userInput').focus();
+        }
+        
+        // Enhanced form submission with premium animations
+        document.getElementById('queryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const userInput = document.getElementById('userInput').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const thinkingText = document.getElementById('thinkingText');
+            const errorDiv = document.getElementById('errorDiv');
+            const successDiv = document.getElementById('successDiv');
+            const responseContainer = document.getElementById('responseContainer');
+            const responseMeta = document.getElementById('responseMeta');
+            const responseContent = document.getElementById('responseContent');
+            
+            if (!userInput) {
+                return;
+            }
+            
+            // Reset UI with smooth transitions
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            responseContainer.style.display = 'none';
+            
+            // Show premium loading state
+            spinner.style.display = 'block';
+            thinkingText.style.display = 'block';
+            sendBtn.disabled = true;
+            btnText.textContent = 'Processing...';
+            
+            // Add loading animation to button
+            sendBtn.style.background = 'linear-gradient(45deg, #a0aec0, #718096)';
+            
+            try {
+                const response = await fetch('/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: userInput
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Add delay for premium feel
+                setTimeout(() => {
+                    if (data.success) {
+                        // Show success response with animations
+                        responseMeta.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>📊 <strong>Analysis Complete:</strong> ${data.generated_at}</span>
+                                <span style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem;">
+                                    ✨ Powered by Mafas AI
+                                </span>
+                            </div>
+                        `;
+                        
+                        // Enhanced content formatting
+                        const formattedContent = data.answer
+                            .replace(/\n/g, '<br>')
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+                        
+                        responseContent.innerHTML = formattedContent;
+                        responseContainer.style.display = 'block';
+                        
+                        // Smooth scroll to results
+                        responseContainer.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                        
+                        // Clear input with animation
+                        document.getElementById('userInput').style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            document.getElementById('userInput').value = '';
+                            document.getElementById('userInput').style.transform = 'scale(1)';
+                        }, 200);
+                        
+                        // Show success notification
+                        successDiv.innerHTML = '🎉 <strong>Success!</strong> Your recruitment intelligence has been generated.';
+                        successDiv.style.display = 'block';
+                        
+                        // Auto-hide success message
+                        setTimeout(() => {
+                            successDiv.style.display = 'none';
+                        }, 3000);
+                        
+                    } else {
+                        // Enhanced error display
+                        errorDiv.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">⚠️</span>
+                                <div>
+                                    <strong>Processing Error:</strong><br>
+                                    ${data.error}
+                                </div>
+                            </div>
+                        `;
+                        errorDiv.style.display = 'block';
+                    }
+                }, 1500); // Premium loading delay
+                
+            } catch (error) {
+                setTimeout(() => {
+                    errorDiv.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.2rem;">🔌</span>
+                            <div>
+                                <strong>Connection Error:</strong><br>
+                                ${error.message}
+                            </div>
+                        </div>
+                    `;
+                    errorDiv.style.display = 'block';
+                }, 1500);
+            } finally {
+                // Reset UI with premium animations
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                    thinkingText.style.display = 'none';
+                    sendBtn.disabled = false;
+                    btnText.textContent = 'Analyze & Execute';
+                    sendBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                }, 1500);
+            }
+        });
+        
+        // Add premium input effects
+        const input = document.getElementById('userInput');
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.15)';
+            } else {
+                this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('queryForm').dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // Add premium hover effects to stats
+        document.querySelectorAll('.stat-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Mafas Facility Service</h1>
+            <p class="subtitle">Agentic AI-driven HR Solutions</p>
+        </div>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: -2;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-circle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-circle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            right: 10%;
+            animation-delay: -2s;
+        }
+        
+        .floating-circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header .subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .header .tagline {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: gradientMove 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+        
+        .input-form {
+            display: flex;
+            gap: 16px;
+            align-items: stretch;
+        }
+        
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        .input-form input {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 400;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .input-form input::placeholder {
+            color: #a0aec0;
+            font-style: italic;
+        }
+        
+        .send-btn {
+            padding: 18px 32px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .send-btn:hover::before {
+            left: 100%;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        .send-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            padding: 8px 16px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(102, 126, 234, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+            display: none;
+        }
+        
+        .thinking-text {
+            text-align: center;
+            color: #667eea;
+            font-weight: 500;
+            margin-top: 15px;
+            animation: pulse 2s infinite;
+            display: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .response-container {
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+            animation: slideUp 0.6s ease-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .response-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .response-meta {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .response-content {
+            line-height: 1.8;
+            color: #2d3748;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+        
+        .response-footer {
+            background: rgba(255, 193, 7, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            color: #b45309;
+            font-size: 0.9rem;
+            font-style: italic;
+            border-left: 4px solid #fbbf24;
+        }
+        
+        .error {
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #f0fdf4, #ffffff);
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #16a34a;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .main-card { padding: 20px; }
+            .input-form { flex-direction: column; }
+            .send-btn { width: 100%; }
+            .stats-bar { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+    
+    <div class="container">
+        <!-- <div class="header">
+            <h1>🚀 Mafas Facility Service</h1>
+            <p class="subtitle">AI-Powered HR Solutions</p>
+        </div> -->
+        
+        <!-- <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">10k+</span>
+                <span class="stat-label">Candidates Matched</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Companies Served</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Success Rate</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">AI Assistant</span>
+            </div>
+        </div> -->
+        
+        <div class="main-card">
+            <div class="input-section">
+                <label class="input-label">🎯 How can I solve for you today?</label>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="fillInput('Find a senior software engineer in Silicon Valley')">Tech Talent</div>
+                    <div class="quick-action" onclick="fillInput('Create interview process for marketing director')">Interview Process</div>
+                    <div class="quick-action" onclick="fillInput('Analyze candidate portfolio for UX designer role')">Portfolio Analysis</div>
+                    <div class="quick-action" onclick="fillInput('Design compensation package for fintech startup')">Compensation</div>
+                    <div class="quick-action" onclick="fillInput('Build recruitment strategy for remote team')">Remote Strategy</div>
+                </div>
+                <form class="input-form" id="queryForm">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            placeholder="e.g. Find a senior DevOps engineer with Kubernetes experience in New York, $120k-150k range"
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="send-btn" id="sendBtn">
+                        <span id="btnText">Analyze & Execute</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="spinner" id="spinner"></div>
+            <div class="thinking-text" id="thinkingText">🧠 AI is analyzing your request and generating intelligent recommendations...</div>
+            <div class="error" id="errorDiv"></div>
+            <div class="success" id="successDiv"></div>
+            
+            <div class="response-container" id="responseContainer">
+                <div class="response-header">
+                    <h3>🎯 Strategic Recruitment Intelligence</h3>
+                </div>
+                <div class="response-meta" id="responseMeta"></div>
+                <div class="response-content" id="responseContent"></div>
+                <div class="response-footer">
+                    ⚡ <strong>AI-Generated Intelligence:</strong> This recruitment strategy was crafted by advanced AI algorithms. Please validate all recommendations, salary ranges, and compliance requirements before implementation.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('queryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const userInput = document.getElementById('userInput').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            const spinner = document.getElementById('spinner');
+            const errorDiv = document.getElementById('errorDiv');
+            const successDiv = document.getElementById('successDiv');
+            const responseContainer = document.getElementById('responseContainer');
+            const responseMeta = document.getElementById('responseMeta');
+            const responseContent = document.getElementById('responseContent');
+            
+            if (!userInput) {
+                return;
+            }
+            
+            // Reset UI
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            responseContainer.style.display = 'none';
+            
+            // Show spinner and disable button
+            spinner.style.display = 'block';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking...';
+            
+            try {
+                const response = await fetch('/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: userInput
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success response
+                    responseMeta.textContent = `Generated: ${data.generated_at} | Created by: Mafas Recruitment Agent`;
+                    responseContent.innerHTML = data.answer.replace(/\n/g, '<br>');
+                    responseContainer.style.display = 'block';
+                    
+                    // Clear input
+                    document.getElementById('userInput').value = '';
+                } else {
+                    // Show error
+                    errorDiv.textContent = data.error;
+                    errorDiv.style.display = 'block';
+                }
+                
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            } finally {
+                // Hide spinner and re-enable button
+                spinner.style.display = 'none';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+            }
+        });
+    </script>
+</body>
+</html>
